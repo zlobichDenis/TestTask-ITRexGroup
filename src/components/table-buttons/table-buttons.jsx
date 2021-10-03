@@ -16,7 +16,7 @@ export default class TableButtons extends React.Component {
 
     render() {
         const { numberOfButtons, onChangeCurrentIndex, currentIndexOfData } = this.props;
-
+        console.log(typeof(currentIndexOfData))
 
         const pageButtons = new Array(numberOfButtons).fill(null).map((item, index) => {
             const keyModifier = Math.random() * 15;
@@ -24,7 +24,7 @@ export default class TableButtons extends React.Component {
                 <button 
                     key={keyModifier}
                     onClick={(evt) => {
-                        const index = evt.target.value;
+                        const index = +evt.target.value;
                         onChangeCurrentIndex(index, this.typesOfButtons.INDEX);
                     }} 
                     value={index} 
