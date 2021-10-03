@@ -10,7 +10,7 @@ export default class Row extends React.Component {
     }
 
     render() {
-        const { person } = this.props;
+        const { person, onClick } = this.props;
 
         const columnsOfPerson = Object.keys(person).map((key) => {
             if (key === 'adress') {
@@ -22,7 +22,7 @@ export default class Row extends React.Component {
         });
         return (
             <tbody>
-                <tr>
+                <tr onClick={onClick}>
                     {columnsOfPerson}
                 </tr>
             </tbody>
@@ -32,4 +32,5 @@ export default class Row extends React.Component {
 
 Row.propTypes = {
     person: PropTypes.object.isRequired,
+    onClick: PropTypes.func.isRequired,
 }

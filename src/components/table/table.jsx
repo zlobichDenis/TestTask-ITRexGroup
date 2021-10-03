@@ -14,10 +14,10 @@ export default class Table extends React.Component {
     }
 
     render() {
-        const { data } = this.props;
+        const { data, onChangeActivePerson } = this.props;
 
         const rowsOfTable = data.map((person) => {
-            return <Row key={person.id} person={person}/>
+            return <Row onClick={() => onChangeActivePerson(person)} key={person.id} person={person}/>
         });
 
         return (
@@ -40,4 +40,5 @@ export default class Table extends React.Component {
 
 Table.propTypes = {
     data: PropTypes.arrayOf(PropTypes.object).isRequired,
+    onChangeActivePerson: PropTypes.func.isRequired,
 }

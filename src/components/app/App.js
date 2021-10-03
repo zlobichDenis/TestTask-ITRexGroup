@@ -14,9 +14,12 @@ export default class App extends React.Component {
 
     this.state = {
       currentIndexOfData: 0,
+      currentActivePerson: null,
   };
 
     this._numberOfPersonsPerPage = 20;
+
+    this.onChangeActivePerson = this.onChangeActivePerson.bind(this);
  }
 
  prepareDataForRendering(data) {
@@ -36,18 +39,24 @@ export default class App extends React.Component {
     return preparedData;
  }
 
+  onChangeActivePerson(person) {
+    this.setState({
+      currentActivePerson: person,
+    })
+ }
+
   render() {
     const { data } = this.props;
     const preparedData = this.prepareDataForRendering(data);
-    const { currentIndexOfData } = this.state
+    const { currentIndexOfData, currentActivePerson } = this.state
 
     return (
       <div className="App">
         <Search />
         <Filters />
-        <Table data={preparedData[currentIndexOfData]}/>
+        <Table onChangeActivePerson={this.onChangeActivePerson} data={preparedData[currentIndexOfData]}/>
         <TableButtons numberOfButtons={preparedData.length}/>
-        <ShowContainer />
+        {currentActivePerson ? <ShowContainer person={currentActivePerson} /> : null }
       </div>
     );
   }
