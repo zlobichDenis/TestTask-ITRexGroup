@@ -14,7 +14,7 @@ export default class App extends React.Component {
 
     this.state = {
       currentIndexOfData: 0,
-    }
+  };
 
     this._numberOfPersonsPerPage = 20;
  }
@@ -38,15 +38,15 @@ export default class App extends React.Component {
 
   render() {
     const { data } = this.props;
-    const { currentIndexOfData } = this.state;
     const preparedData = this.prepareDataForRendering(data);
-    
+    const { currentIndexOfData } = this.state
+
     return (
       <div className="App">
         <Search />
         <Filters />
         <Table data={preparedData[currentIndexOfData]}/>
-        <TableButtons />
+        <TableButtons numberOfButtons={preparedData.length}/>
         <ShowContainer />
       </div>
     );
