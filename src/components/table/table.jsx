@@ -17,7 +17,8 @@ export default class Table extends React.Component {
         const { data, onChangeActivePerson } = this.props;
 
         const rowsOfTable = data.map((person) => {
-            return <Row onClick={() => onChangeActivePerson(person)} key={person.id} person={person}/>
+            const keyModifier = Math.random() * 10;
+            return <Row onClick={() => onChangeActivePerson(person)} key={person.id + keyModifier} person={person}/>
         });
 
         return (

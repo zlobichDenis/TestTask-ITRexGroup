@@ -13,12 +13,13 @@ export default class Row extends React.Component {
         const { person, onClick } = this.props;
 
         const columnsOfPerson = Object.keys(person).map((key) => {
+            const keyModifier = Math.random() * 10;
             if (key === 'adress') {
-                return <Column key={`person${person[key].id}__${key}`} value={person[key].state} />
+                return <Column key={`person${person[key].id + keyModifier}__${key}`} value={person[key].state} />
             } else if (key === 'description') {
                 return;
             }
-            return <Column key={`person${person[key].id}__${key}`} value={person[key]} />
+            return <Column key={`person${person[key].id + keyModifier}__${key}`} value={person[key]} />
         });
         return (
             <tbody>

@@ -20,6 +20,7 @@ export default class App extends React.Component {
     this._numberOfPersonsPerPage = 20;
 
     this.onChangeActivePerson = this.onChangeActivePerson.bind(this);
+    this.onChangeCurrentIndex = this.onChangeCurrentIndex.bind(this);
  }
 
  prepareDataForRendering(data) {
@@ -45,6 +46,29 @@ export default class App extends React.Component {
     })
  }
 
+  onChangeCurrentIndex(index, typeOfButton) {
+    switch (typeOfButton) {
+      case 'NEXT':
+        this.setState(prevState => ({
+          currentIndexOfData: prevState.currentIndexOfData + 1,
+        }))
+
+        break;
+
+      case 'PREV':
+        this.setState(prevState => ({
+          currentIndexOfData: prevState.currentIndexOfData -1,
+        }))
+        break;
+
+      default:
+        this.setState({
+          currentIndexOfData: index,
+        })
+    }
+
+ }
+
   render() {
     const { data } = this.props;
     const preparedData = this.prepareDataForRendering(data);
@@ -55,7 +79,7 @@ export default class App extends React.Component {
         <Search />
         <Filters />
         <Table onChangeActivePerson={this.onChangeActivePerson} data={preparedData[currentIndexOfData]}/>
-        <TableButtons numberOfButtons={preparedData.length}/>
+        <TableButtons currentIndexOfData={currentIndexOfData} onChangeCurrentIndex={this.onChangeCurrentIndex} numberOfButtons={preparedData.length}/>
         {currentActivePerson ? <ShowContainer person={currentActivePerson} /> : null }
       </div>
     );
