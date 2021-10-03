@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React from "react";
 import PropTypes from 'prop-types';
 import Table from "../table/table";
 import Filters from "../filters/filters";
@@ -10,16 +10,42 @@ export default class App extends React.Component {
   constructor(props) {
     super(props);
 
-    this.props = props
+    this.props = props;
+
+    this.state = {
+      currentIndexOfData: 0,
+    }
+
+    this._numberOfPersonsPerPage = 20;
+ }
+
+ prepareDataForRendering(data) {
+    let preparedData = [];
+    const numberOfPersonsPerPage = 20;
+
+    (function sliceArr(firstIndex = 0, secondIndex = 20) {
+      if (firstIndex === data.length) {
+        return;
+      }
+      preparedData.push(data.slice(firstIndex, secondIndex))
+      firstIndex = secondIndex;
+      secondIndex += numberOfPersonsPerPage;
+      return sliceArr(firstIndex, secondIndex);
+    })();
+
+    return preparedData;
  }
 
   render() {
     const { data } = this.props;
+    const { currentIndexOfData } = this.state;
+    const preparedData = this.prepareDataForRendering(data);
+    
     return (
       <div className="App">
         <Search />
         <Filters />
-        <Table data={data}/>
+        <Table data={preparedData[currentIndexOfData]}/>
         <TableButtons />
         <ShowContainer />
       </div>

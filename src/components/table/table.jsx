@@ -10,8 +10,14 @@ export default class Table extends React.Component {
     }
 
     render() {
+        const { data } = this.props;
+
+        const rowsOfTable = data.map((person) => {
+            return <Row key={person.id} person={person}/>
+        });
+
         return (
-            <table border="1">
+            <table style={{width:'100%', height: '400px'}} border="1">
                 <thead>               
                     <tr>
                         <th>Id</th>
@@ -22,8 +28,12 @@ export default class Table extends React.Component {
                         <th>State</th>
                     </tr>
                 </thead>
-                <Row />
+                {rowsOfTable}
             </table>
         )
     }
+}
+
+Table.propTypes = {
+    data: PropTypes.arrayOf(PropTypes.object).isRequired,
 }

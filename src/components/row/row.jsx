@@ -10,13 +10,26 @@ export default class Row extends React.Component {
     }
 
     render() {
+        const { person } = this.props;
+
+        const columnsOfPerson = Object.keys(person).map((key) => {
+            if (key === 'adress') {
+                return <Column key={`person${person[key].id}__${key}`} value={person[key].state} />
+            } else if (key === 'description') {
+                return;
+            }
+            return <Column key={`person${person[key].id}__${key}`} value={person[key]} />
+        });
         return (
             <tbody>
                 <tr>
-                    <Column />
+                    {columnsOfPerson}
                 </tr>
             </tbody>
         )
     }
+}
 
+Row.propTypes = {
+    person: PropTypes.object.isRequired,
 }

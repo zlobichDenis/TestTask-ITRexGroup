@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from 'prop-types';
 
 export default class Column extends React.Component {
     constructor(props){
@@ -8,8 +9,13 @@ export default class Column extends React.Component {
     }
 
     render() {
+        const { value } = this.props;
         return (
-            <td>Some column</td>
+            <td>{ value }</td>
         )
     }
+}
+
+Column.propTypes = {
+    value: PropTypes.any.isRequired,
 }
