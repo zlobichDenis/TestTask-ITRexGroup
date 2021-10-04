@@ -17,10 +17,10 @@ export default class App extends React.Component {
       currentActivePerson: null,
       activeFilter: 'NONE',
       activeFieldOfSort: {},
-      substringInSeatch: '',
+      substringInSearch: '',
   };
 
-    this.showedPersons = [];
+
 
     this.onChangeActivePerson = this.onChangeActivePerson.bind(this);
     this.onChangeCurrentIndex = this.onChangeCurrentIndex.bind(this);
@@ -100,7 +100,7 @@ export default class App extends React.Component {
       let filteredData = data.filter((item) => item.adress.state === filter);
         if (substring) {
           let dataWithSubstring = filteredData.filter((person) => person.firstName.includes(substring));
-          return preparedData = dataWithSubstring.length > 0 ? this.splitDataByPage(dataWithSubstring) : this.splitDataByPage(data);
+          return preparedData = dataWithSubstring.length > 0 ? this.splitDataByPage(dataWithSubstring) : this.splitDataByPage(filteredData);
         }
       preparedData = this.splitDataByPage(filteredData)
       return preparedData;
@@ -162,7 +162,7 @@ export default class App extends React.Component {
 
   onChangeSubstringInSearch(string) {
     this.setState({
-      substringInSeatch: string,
+      substringInSearch: string,
       activeFieldOfSort: {},
       currentIndexOfData: 0,
     })
@@ -172,9 +172,9 @@ export default class App extends React.Component {
 
   render() {
     const { data } = this.props;
-    let { activeFilter, activeFieldOfSort, substringInSeatch } = this.state;
+    let { activeFilter, activeFieldOfSort, substringInSearch } = this.state;
     let sortedData = this.getSortedData(data, activeFieldOfSort);
-    this.showedPersons = this.prepareDataForRenderingByFilter(sortedData, activeFilter, substringInSeatch);
+    const showedPersons = this.prepareDataForRenderingByFilter(sortedData, activeFilter, substringInSearch);
     let availableStates = this.getTheAvailableStates(sortedData);
     const { currentIndexOfData, currentActivePerson } = this.state;
 
@@ -183,8 +183,8 @@ export default class App extends React.Component {
       <div className="App">
         <Search onChangeSubstringInSearch={this.onChangeSubstringInSearch}/>
         <Filters onChangeActiveFilter={this.onChangeActiveFilter} availableStates={availableStates}/>
-        <Table onChangeActiveFieldOfSort={this.onChangeActiveFieldOfSort} activeFieldOfSort={activeFieldOfSort} onChangeActivePerson={this.onChangeActivePerson} data={this.showedPersons[currentIndexOfData]}/>
-        <TableButtons currentIndexOfData={currentIndexOfData} onChangeCurrentIndex={this.onChangeCurrentIndex} numberOfButtons={this.showedPersons.length}/>
+        <Table onChangeActiveFieldOfSort={this.onChangeActiveFieldOfSort} activeFieldOfSort={activeFieldOfSort} onChangeActivePerson={this.onChangeActivePerson} data={showedPersons[currentIndexOfData]}/>
+        <TableButtons currentIndexOfData={currentIndexOfData} onChangeCurrentIndex={this.onChangeCurrentIndex} numberOfButtons={showedPersons.length}/>
         {currentActivePerson ? <ShowContainer person={currentActivePerson} /> : null }
       </div>
     );

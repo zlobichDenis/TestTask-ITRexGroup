@@ -16,22 +16,24 @@ export const Filters = (props) => {
     })
     
     return (
-        <select                    
-            onChange={(evt) => {
-                const activeFilter = evt.target.value;
-                onChangeActiveFilter(activeFilter)
-            }}  
-            defaultValue='to-high' 
-            className="places__sorting-type" 
-            id="places-sorting">
-            <option 
-                key={`state-${'None'}`} 
-                className="" 
-                value={'NONE'}>
-                NONE
-            </option>
-            {options}
-        </select>
+        <div class="select">
+            <select                    
+                onChange={(evt) => {
+                    const activeFilter = evt.target.value;
+                    onChangeActiveFilter(activeFilter)
+                }}  
+                defaultValue='to-high' 
+                className="select" 
+                id="places-sorting">
+                <option 
+                    key={`state-${'None'}`} 
+                    className="" 
+                    value={'NONE'}>
+                    NONE
+                </option>
+                {options}
+            </select>
+        </div>
     )
 }
 

@@ -17,6 +17,7 @@ export const TableButtons = (props) => {
         const keyModifier = Math.random() * 15;
         return (
             <button 
+                className='page-button'
                 disabled={index === currentIndexOfData ? true : false}
                 key={keyModifier}
                 onClick={(evt) => {
@@ -29,8 +30,9 @@ export const TableButtons = (props) => {
         )
     })
     return (
-        <div>
-            <button 
+        <div className='page-buttons'>
+            <button
+                className='page-button' 
                 onClick={() => {
                     onChangeCurrentIndex(null, TYPES_OF_BUTTONS.PREV);
                 }} 
@@ -41,6 +43,7 @@ export const TableButtons = (props) => {
             </button>
             {pageButtons}
             <button 
+                className='page-button'
                 onClick={() => {
                     onChangeCurrentIndex(null, TYPES_OF_BUTTONS.NEXT);
                 }} 

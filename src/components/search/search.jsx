@@ -5,6 +5,8 @@ export const Search = (props) => {
     const { onChangeSubstringInSearch } = props;
     return (
         <input 
+            className='search-input'
+            placeholder='Seach By Name: '
             onChange={(evt) => {
                 setTimeout(onChangeSubstringInSearch(evt.target.value), 500)
                 // onChangeSubstringInSearch(evt.target.value)

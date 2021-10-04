@@ -13,12 +13,12 @@ export const Table = (props) => {
     });
 
     const headRow = Object.keys(data[0]).map((key) => {
-        const activeStyle = activeFieldTitle === key && direction === true ? {color:'red'} : {color:'blue'};
+        const activeStyle = activeFieldTitle === key && direction === true ? {transform: 'rotate(180deg)'} : {};
         if (key === 'adress') {
             return (
                 <th key={`head-row__state`}>
                     <button 
-                        style={activeFieldTitle === 'state' && direction ? {color:'red'} : {color:'blue'}}
+                        className='sort-button'
                         onClick={() => {
                             const sortField = 'state';
                             const isDecrease = activeFieldTitle === 'state' ? !direction : true;
@@ -29,8 +29,12 @@ export const Table = (props) => {
                             onChangeActiveFieldOfSort(fieldOfSort)
                         }}
                         key={`sort-button-${key}`} 
-                        value='state'>To top/down
-                    </button>state
+                        value='state'> 
+                            <img 
+                                style={activeFieldTitle === 'state' && direction === true ? {transform: 'rotate(180deg)'} : {}} 
+                                alt='sort'
+                                className='sort-button__img' src="https://img.icons8.com/external-those-icons-lineal-color-those-icons/50/000000/external-arrow-arrows-those-icons-lineal-color-those-icons-8.png"/>
+                    </button>state 
                 </th>
             )
         } else if (key === 'description') {
@@ -39,7 +43,7 @@ export const Table = (props) => {
         return (
             <th key={`head-row__${key}`}>
                 <button 
-                    style={activeStyle} 
+                    className='sort-button'
                     onClick={(evt) => {
                         const sortField = evt.target.value;
                         const isDecrease = activeFieldTitle === key ? !direction : true;
@@ -50,14 +54,15 @@ export const Table = (props) => {
                         onChangeActiveFieldOfSort(fieldOfSort)
                         }} 
                     key={`sort-button-${key}`} 
-                    value={key}>To top/down
+                    value={key}>
+                        <img alt='sort' style={activeStyle} className='sort-button__img' src="https://img.icons8.com/external-those-icons-lineal-color-those-icons/50/000000/external-arrow-arrows-those-icons-lineal-color-those-icons-8.png"/>
                 </button>{key}
             </th>
         )
     })
 
     return (
-        <table style={{width:'100%', height: '400px'}} border="1">
+        <table className="container">
             <thead>               
                 <tr>
                     {headRow}
