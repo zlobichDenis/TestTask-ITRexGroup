@@ -5,7 +5,7 @@ import { Row } from "../row/row";
 
 export const Table = (props) => {
     const { data, onChangeActivePerson, activeFieldOfSort, onChangeActiveFieldOfSort } = props;
-    const { field: activeFieldTitle, direction } = activeFieldOfSort;
+    const { field: activeFieldTitle, isDescending: direction } = activeFieldOfSort;
 
     const rowsOfTable = data.map((person) => {
         const keyModifier = Math.random() * 10;
@@ -21,11 +21,8 @@ export const Table = (props) => {
                         className='sort-button'
                         onClick={() => {
                             const sortField = 'state';
-                            const isDecrease = activeFieldTitle === 'state' ? !direction : true;
-                            const fieldOfSort = {
-                                field: sortField,
-                                direction: isDecrease,
-                            }
+                            const isDescending = activeFieldTitle === 'state' ? !direction : true;
+                            const fieldOfSort = { field: sortField, isDescending: isDescending, };
                             onChangeActiveFieldOfSort(fieldOfSort)
                         }}
                         key={`sort-button-${key}`} 
@@ -46,11 +43,8 @@ export const Table = (props) => {
                     className='sort-button'
                     onClick={(evt) => {
                         const sortField = evt.target.value;
-                        const isDecrease = activeFieldTitle === key ? !direction : true;
-                        const fieldOfSort = {
-                                field: sortField,
-                                direction: isDecrease,
-                            }
+                        const isDescending = activeFieldTitle === key ? !direction : true;
+                        const fieldOfSort = { field: sortField, isDescending: isDescending, }
                         onChangeActiveFieldOfSort(fieldOfSort)
                         }} 
                     key={`sort-button-${key}`} 

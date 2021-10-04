@@ -20,8 +20,6 @@ export default class App extends React.Component {
       substringInSearch: '',
   };
 
-
-
     this.onChangeActivePerson = this.onChangeActivePerson.bind(this);
     this.onChangeCurrentIndex = this.onChangeCurrentIndex.bind(this);
     this.onChangeActiveFilter = this.onChangeActiveFilter.bind(this);
@@ -39,6 +37,8 @@ export default class App extends React.Component {
         if ((index + 1) % maxNumberOfPersonsPerPage === 0) {
           preparedData.push(data.slice(first, index + 1));
           first += 20
+        } else if (first + 20 > data.length) {
+          preparedData.push(data.slice(first));
         }
       })
       return preparedData
@@ -49,36 +49,35 @@ export default class App extends React.Component {
   }
 
   getSortedData(data, sortField) {
-    const { field, direction } = sortField;
-  
+    const { field, isDescending } = sortField;
     switch (field) {
       case 'id':
-        if (direction) {
+        if (isDescending) {
           return data.slice().sort((a, b) => b.id - a.id);
         }
         return data.slice().sort((a, b) => a.id - b.id);
       case 'firstName':
-        if (direction) {
+        if (isDescending) {
           return data.slice().sort((a, b) => b.firstName.localeCompare(a.firstName));
         }
         return data.slice().sort((a, b) => a.firstName.localeCompare(b.firstName));
       case 'lastName':
-        if (direction) {
+        if (isDescending) {
           return data.slice().sort((a, b) => b.lastName.localeCompare(a.lastName));
         }
         return data.slice().sort((a, b) => a.lastName.localeCompare(b.lastName));
       case 'email':
-        if (direction) {
+        if (isDescending) {
           return data.slice().sort((a, b) => b.email.localeCompare(a.email));
         }
         return data.slice().sort((a, b) => a.email.localeCompare(b.email));
       case 'phone':
-        if (direction) {
+        if (isDescending) {
           return data.slice().sort((a, b) => b.phone[1].localeCompare(a.phone[1]));
         }
         return data.slice().sort((a, b) => a.phone[1].localeCompare(b.phone[1]));
       case 'state': 
-        if (direction) {
+        if (isDescending) {
           return data.slice().sort((a, b) => b.adress.state.localeCompare(a.adress.state));
         }
         return data.slice().sort((a, b) => a.adress.state.localeCompare(b.adress.state));
@@ -97,7 +96,7 @@ export default class App extends React.Component {
       preparedData = this.splitDataByPage(data);
       return preparedData;
     } else {
-      let filteredData = data.filter((item) => item.adress.state === filter);
+      const filteredData = data.filter((item) => item.adress.state === filter);
         if (substring) {
           let dataWithSubstring = filteredData.filter((person) => person.firstName.includes(substring));
           return preparedData = dataWithSubstring.length > 0 ? this.splitDataByPage(dataWithSubstring) : this.splitDataByPage(filteredData);
@@ -119,7 +118,6 @@ export default class App extends React.Component {
         this.setState(prevState => ({
           currentIndexOfData: prevState.currentIndexOfData + 1,
         }))
-
         break;
 
       case 'PREV':

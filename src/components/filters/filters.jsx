@@ -16,7 +16,7 @@ export const Filters = (props) => {
     })
     
     return (
-        <div class="select">
+        <div className="select">
             <select                    
                 onChange={(evt) => {
                     const activeFilter = evt.target.value;

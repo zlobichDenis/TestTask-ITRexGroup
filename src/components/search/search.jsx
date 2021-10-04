@@ -8,8 +8,7 @@ export const Search = (props) => {
             className='search-input'
             placeholder='Seach By Name: '
             onChange={(evt) => {
-                setTimeout(onChangeSubstringInSearch(evt.target.value), 500)
-                // onChangeSubstringInSearch(evt.target.value)
+                onChangeSubstringInSearch(evt.target.value)
             }} 
             type='text'>
         </input>
