@@ -8,8 +8,9 @@ export default class Search extends React.Component {
     }
 
     render() {
+        const { onChangeSubstringInSearch } = this.props;
         return (
-            <input type='text'></input>
+            <input onBlur={(evt) => onChangeSubstringInSearch(evt.target.value)} type='text'></input>
         )
     }
 }

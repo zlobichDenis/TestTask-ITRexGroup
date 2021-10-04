@@ -17,6 +17,7 @@ export default class App extends React.Component {
       currentActivePerson: null,
       activeFilter: 'NONE',
       activeFieldOfSort: {},
+      substringInSeatch: '',
   };
 
     this.showedPersons = [];
@@ -25,6 +26,7 @@ export default class App extends React.Component {
     this.onChangeCurrentIndex = this.onChangeCurrentIndex.bind(this);
     this.onChangeActiveFilter = this.onChangeActiveFilter.bind(this);
     this.onChangeActiveFieldOfSort = this.onChangeActiveFieldOfSort.bind(this);
+    this.onChangeSubstringInSearch = this.onChangeSubstringInSearch.bind(this);
  }
 
   splitDataByPage(data) {
@@ -51,7 +53,6 @@ export default class App extends React.Component {
 
   getSortedData(data, sortField) {
     const { field, direction } = sortField;
-    console.log(direction, field)
   
     switch (field) {
       case 'id':
@@ -89,13 +90,18 @@ export default class App extends React.Component {
     }
   }
 
-  prepareDataForRenderingByFilter(data, filter) {
+  prepareDataForRenderingByFilter(data, filter, substring) {
     let preparedData
     if (filter === 'NONE') {
+      if (substring) {
+        let dataWithSubstring = data.filter((person) => person.firstName.includes(substring));
+
+        return preparedData = dataWithSubstring.length > 0 ? this.splitDataByPage(dataWithSubstring) : this.splitDataByPage(data);
+      }
       preparedData = this.splitDataByPage(data);
-      
       return preparedData;
     } else {
+
       let filteredData = data.filter((item) => item.adress.state === filter);
       preparedData = this.splitDataByPage(filteredData)
       return preparedData;
@@ -151,6 +157,15 @@ export default class App extends React.Component {
   onChangeActiveFieldOfSort(sortField) {
     this.setState({
       activeFieldOfSort: sortField,
+      currentIndexOfData: 0,
+    })
+  }
+
+  onChangeSubstringInSearch(string) {
+    this.setState({
+      substringInSeatch: string,
+      activeFieldOfSort: {},
+      currentIndexOfData: 0,
     })
   }
 
@@ -158,16 +173,16 @@ export default class App extends React.Component {
 
   render() {
     const { data } = this.props;
-    let { activeFilter, activeFieldOfSort } = this.state;
+    let { activeFilter, activeFieldOfSort, substringInSeatch } = this.state;
     let sortedData = this.getSortedData(data, activeFieldOfSort);
-    this.showedPersons = this.prepareDataForRenderingByFilter(sortedData, activeFilter);
+    this.showedPersons = this.prepareDataForRenderingByFilter(sortedData, activeFilter, substringInSeatch);
     let availableStates = this.getTheAvailableStates(sortedData);
     const { currentIndexOfData, currentActivePerson } = this.state;
 
 
     return (
       <div className="App">
-        <Search />
+        <Search onChangeSubstringInSearch={this.onChangeSubstringInSearch}/>
         <Filters onChangeActiveFilter={this.onChangeActiveFilter} availableStates={availableStates}/>
         <Table onChangeActiveFieldOfSort={this.onChangeActiveFieldOfSort} activeFieldOfSort={activeFieldOfSort} onChangeActivePerson={this.onChangeActivePerson} data={this.showedPersons[currentIndexOfData]}/>
         <TableButtons currentIndexOfData={currentIndexOfData} onChangeCurrentIndex={this.onChangeCurrentIndex} numberOfButtons={this.showedPersons.length}/>
