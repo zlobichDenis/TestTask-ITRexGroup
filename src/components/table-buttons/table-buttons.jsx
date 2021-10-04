@@ -1,6 +1,6 @@
 import React from "react";
 import PropTypes from 'prop-types';
-import Table from "../table/table";
+
 
 export default class TableButtons extends React.Component {
     constructor(props) {

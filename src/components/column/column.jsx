@@ -9,13 +9,13 @@ export default class Column extends React.Component {
     }
 
     render() {
-        const { value } = this.props;
+        const { fieldValue } = this.props;
         return (
-            <td>{ value }</td>
+            <td>{ fieldValue }</td>
         )
     }
 }
 
 Column.propTypes = {
-    value: PropTypes.any.isRequired,
+    fieldValue: PropTypes.any.isRequired,
 }

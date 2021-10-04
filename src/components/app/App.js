@@ -15,29 +15,50 @@ export default class App extends React.Component {
     this.state = {
       currentIndexOfData: 0,
       currentActivePerson: null,
+      activeFilter: 'NONE',
+      showedPersons: null,
   };
 
     this._numberOfPersonsPerPage = 20;
 
     this.onChangeActivePerson = this.onChangeActivePerson.bind(this);
     this.onChangeCurrentIndex = this.onChangeCurrentIndex.bind(this);
+    this.onChangeActiveFilter = this.onChangeActiveFilter.bind(this);
  }
 
- prepareDataForRendering(data) {
+  splitDataByPage(data) {
     let preparedData = [];
-    const numberOfPersonsPerPage = 20;
+    const maxNumberOfPersonsPerPage = 20;
 
     (function sliceArr(firstIndex = 0, secondIndex = 20) {
       if (firstIndex === data.length) {
         return;
       }
+      if (data.length <= maxNumberOfPersonsPerPage) {
+        secondIndex = data.length;
+        preparedData.push(data.slice(firstIndex, secondIndex));
+        return;
+      }
       preparedData.push(data.slice(firstIndex, secondIndex))
-      firstIndex = secondIndex;
-      secondIndex += numberOfPersonsPerPage;
+      firstIndex += maxNumberOfPersonsPerPage;
+      secondIndex += maxNumberOfPersonsPerPage;
       return sliceArr(firstIndex, secondIndex);
     })();
 
     return preparedData;
+  }
+
+  prepareDataForRenderingByFilter(data, filter) {
+    let preparedData
+    if (filter === 'NONE') {
+      preparedData = this.splitDataByPage(data);
+
+      return preparedData;
+    } else {
+      let filteredData = data.filter((item) => item.adress.state === filter);
+      preparedData = this.splitDataByPage(filteredData)
+      return preparedData;
+    }
  }
 
   onChangeActivePerson(person) {
@@ -69,17 +90,34 @@ export default class App extends React.Component {
 
  }
 
+  getTheAvailableStates(data) {
+    let availableStates = new Set();
+    data.forEach((person) => {
+      availableStates.add(person.adress.state);
+    })
+    
+    return availableStates
+  }
+
+  onChangeActiveFilter(activeFilter) {
+    this.setState({
+      activeFilter: activeFilter,
+    })
+  }
+
   render() {
     const { data } = this.props;
-    const preparedData = this.prepareDataForRendering(data);
-    const { currentIndexOfData, currentActivePerson } = this.state
+    let { showedPersons, activeFilter } = this.state;
+    showedPersons = this.prepareDataForRenderingByFilter(data, activeFilter);
+    const availableStates = this.getTheAvailableStates(data);
+    const { currentIndexOfData, currentActivePerson } = this.state;
 
     return (
       <div className="App">
         <Search />
-        <Filters />
-        <Table onChangeActivePerson={this.onChangeActivePerson} data={preparedData[currentIndexOfData]}/>
-        <TableButtons currentIndexOfData={currentIndexOfData} onChangeCurrentIndex={this.onChangeCurrentIndex} numberOfButtons={preparedData.length}/>
+        <Filters onChangeActiveFilter={this.onChangeActiveFilter} availableStates={availableStates}/>
+        <Table onChangeActivePerson={this.onChangeActivePerson} data={showedPersons[currentIndexOfData]}/>
+        <TableButtons currentIndexOfData={currentIndexOfData} onChangeCurrentIndex={this.onChangeCurrentIndex} numberOfButtons={showedPersons.length}/>
         {currentActivePerson ? <ShowContainer person={currentActivePerson} /> : null }
       </div>
     );
