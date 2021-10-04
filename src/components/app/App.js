@@ -92,14 +92,16 @@ export default class App extends React.Component {
     if (filter === 'NONE') {
       if (substring) {
         let dataWithSubstring = data.filter((person) => person.firstName.includes(substring));
-
         return preparedData = dataWithSubstring.length > 0 ? this.splitDataByPage(dataWithSubstring) : this.splitDataByPage(data);
       }
       preparedData = this.splitDataByPage(data);
       return preparedData;
     } else {
-
       let filteredData = data.filter((item) => item.adress.state === filter);
+        if (substring) {
+          let dataWithSubstring = filteredData.filter((person) => person.firstName.includes(substring));
+          return preparedData = dataWithSubstring.length > 0 ? this.splitDataByPage(dataWithSubstring) : this.splitDataByPage(data);
+        }
       preparedData = this.splitDataByPage(filteredData)
       return preparedData;
     }
