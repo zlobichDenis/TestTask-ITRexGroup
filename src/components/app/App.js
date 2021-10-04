@@ -16,14 +16,15 @@ export default class App extends React.Component {
       currentIndexOfData: 0,
       currentActivePerson: null,
       activeFilter: 'NONE',
-      showedPersons: null,
+      activeFieldOfSort: {},
   };
 
-    this._numberOfPersonsPerPage = 20;
+    this.showedPersons = [];
 
     this.onChangeActivePerson = this.onChangeActivePerson.bind(this);
     this.onChangeCurrentIndex = this.onChangeCurrentIndex.bind(this);
     this.onChangeActiveFilter = this.onChangeActiveFilter.bind(this);
+    this.onChangeActiveFieldOfSort = this.onChangeActiveFieldOfSort.bind(this);
  }
 
   splitDataByPage(data) {
@@ -48,11 +49,51 @@ export default class App extends React.Component {
     return preparedData;
   }
 
+  getSortedData(data, sortField) {
+    const { field, direction } = sortField;
+    console.log(direction, field)
+  
+    switch (field) {
+      case 'id':
+        if (direction) {
+          return data.slice().sort((a, b) => b.id - a.id);
+        }
+        return data.slice().sort((a, b) => a.id - b.id);
+      case 'firstName':
+        if (direction) {
+          return data.slice().sort((a, b) => b.firstName.localeCompare(a.firstName));
+        }
+        return data.slice().sort((a, b) => a.firstName.localeCompare(b.firstName));
+      case 'lastName':
+        if (direction) {
+          return data.slice().sort((a, b) => b.lastName.localeCompare(a.lastName));
+        }
+        return data.slice().sort((a, b) => a.lastName.localeCompare(b.lastName));
+      case 'email':
+        if (direction) {
+          return data.slice().sort((a, b) => b.email.localeCompare(a.email));
+        }
+        return data.slice().sort((a, b) => a.email.localeCompare(b.email));
+      case 'phone':
+        if (direction) {
+          return data.slice().sort((a, b) => b.phone[1].localeCompare(a.phone[1]));
+        }
+        return data.slice().sort((a, b) => a.phone[1].localeCompare(b.phone[1]));
+      case 'state': 
+        if (direction) {
+          return data.slice().sort((a, b) => b.adress.state.localeCompare(a.adress.state));
+        }
+        return data.slice().sort((a, b) => a.adress.state.localeCompare(b.adress.state));
+      default:
+        return data;
+    }
+  }
+
   prepareDataForRenderingByFilter(data, filter) {
     let preparedData
     if (filter === 'NONE') {
       preparedData = this.splitDataByPage(data);
-
+      
       return preparedData;
     } else {
       let filteredData = data.filter((item) => item.adress.state === filter);
@@ -102,22 +143,34 @@ export default class App extends React.Component {
   onChangeActiveFilter(activeFilter) {
     this.setState({
       activeFilter: activeFilter,
+      currentIndexOfData: 0,
+      activeFieldOfSort: {},
     })
   }
 
+  onChangeActiveFieldOfSort(sortField) {
+    this.setState({
+      activeFieldOfSort: sortField,
+    })
+  }
+
+
+
   render() {
     const { data } = this.props;
-    let { showedPersons, activeFilter } = this.state;
-    showedPersons = this.prepareDataForRenderingByFilter(data, activeFilter);
-    const availableStates = this.getTheAvailableStates(data);
+    let { activeFilter, activeFieldOfSort } = this.state;
+    let sortedData = this.getSortedData(data, activeFieldOfSort);
+    this.showedPersons = this.prepareDataForRenderingByFilter(sortedData, activeFilter);
+    let availableStates = this.getTheAvailableStates(sortedData);
     const { currentIndexOfData, currentActivePerson } = this.state;
+
 
     return (
       <div className="App">
         <Search />
         <Filters onChangeActiveFilter={this.onChangeActiveFilter} availableStates={availableStates}/>
-        <Table onChangeActivePerson={this.onChangeActivePerson} data={showedPersons[currentIndexOfData]}/>
-        <TableButtons currentIndexOfData={currentIndexOfData} onChangeCurrentIndex={this.onChangeCurrentIndex} numberOfButtons={showedPersons.length}/>
+        <Table onChangeActiveFieldOfSort={this.onChangeActiveFieldOfSort} activeFieldOfSort={activeFieldOfSort} onChangeActivePerson={this.onChangeActivePerson} data={this.showedPersons[currentIndexOfData]}/>
+        <TableButtons currentIndexOfData={currentIndexOfData} onChangeCurrentIndex={this.onChangeCurrentIndex} numberOfButtons={this.showedPersons.length}/>
         {currentActivePerson ? <ShowContainer person={currentActivePerson} /> : null }
       </div>
     );

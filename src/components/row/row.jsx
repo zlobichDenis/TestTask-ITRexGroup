@@ -10,7 +10,7 @@ export default class Row extends React.Component {
     }
 
     render() {
-        const { person, onClick } = this.props;
+        const { person, onChangeActivePerson } = this.props;
 
         const columnsOfPerson = Object.keys(person).map((key) => {
             const keyModifier = Math.random() * 10;
@@ -24,7 +24,7 @@ export default class Row extends React.Component {
 
         return (
             <tbody>
-                <tr onClick={onClick}>
+                <tr onClick={onChangeActivePerson}>
                     {columnsOfPerson}
                 </tr>
             </tbody>
@@ -34,5 +34,5 @@ export default class Row extends React.Component {
 
 Row.propTypes = {
     person: PropTypes.object.isRequired,
-    onClick: PropTypes.func.isRequired,
+    onChangeActivePerson: PropTypes.func.isRequired,
 }
