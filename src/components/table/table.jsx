@@ -44,7 +44,7 @@ export default class Table extends React.Component {
                     </th>
                 )
             } else if (key === 'description') {
-                return;
+                return undefined;
             }
             return (
                 <th key={`head-row__${key}`}>

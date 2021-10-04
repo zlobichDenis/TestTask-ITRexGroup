@@ -17,7 +17,7 @@ export default class Row extends React.Component {
             if (key === 'adress') {
                 return <Column key={`person${person[key].id + keyModifier}__${key}`} fieldValue={person[key].state} />
             } else if (key === 'description') {
-                return;
+                return undefined;
             }
             return <Column key={`person${person[key].id + keyModifier}__${key}`} fieldValue={person[key]} />
         });
