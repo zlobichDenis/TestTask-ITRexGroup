@@ -49,7 +49,7 @@ export default class TableButtons extends React.Component {
                         onChangeCurrentIndex(null, this.typesOfButtons.NEXT);
                     }} 
                     name='next-page'
-                    disabled={currentIndexOfData === 5 ? true : false}
+                    disabled={currentIndexOfData === 5 || numberOfButtons <= 1 ? true : false}
                     >
                     Next
                 </button>
