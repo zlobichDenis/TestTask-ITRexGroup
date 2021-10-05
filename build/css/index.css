@@ -103,7 +103,8 @@ h2 a {
 }
 
 .search-input {
-  width: 300px;
+  display: block;
+  width: 100%;
   height: 50px;
   background: #2b303b;
   border: none;
@@ -213,6 +214,11 @@ select {
   font-weight: normal;
   color: white;
   text-decoration: underline;
+}
+
+.not-found {
+  display: flex;
+  width: 100%;
 }
 
 @media (max-width: 800px) {

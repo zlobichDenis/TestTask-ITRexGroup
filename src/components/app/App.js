@@ -5,6 +5,7 @@ import { Filters } from "../filters/filters";
 import { Search } from "../search/search";
 import { TableButtons } from "../table-buttons/table-buttons";
 import { ShowContainer } from "../show-container/show-container";
+import { NotFound } from "../not-found/not-found";
 
 export default class App extends React.Component {
   constructor(props) {
@@ -91,7 +92,8 @@ export default class App extends React.Component {
     if (filter === 'NONE') {
       if (substring) {
         let dataWithSubstring = data.filter((person) => person.firstName.includes(substring));
-        return preparedData = dataWithSubstring.length > 0 ? this.splitDataByPage(dataWithSubstring) : this.splitDataByPage(data);
+        // return preparedData = dataWithSubstring.length > 0 ? this.splitDataByPage(dataWithSubstring) : this.splitDataByPage(data);
+        return preparedData = dataWithSubstring.length > 0 ? this.splitDataByPage(dataWithSubstring) : null;
       }
       preparedData = this.splitDataByPage(data);
       return preparedData;
@@ -99,7 +101,7 @@ export default class App extends React.Component {
       const filteredData = data.filter((item) => item.adress.state === filter);
         if (substring) {
           let dataWithSubstring = filteredData.filter((person) => person.firstName.includes(substring));
-          return preparedData = dataWithSubstring.length > 0 ? this.splitDataByPage(dataWithSubstring) : this.splitDataByPage(filteredData);
+          return preparedData = dataWithSubstring.length > 0 ? this.splitDataByPage(dataWithSubstring) : null;
         }
       preparedData = this.splitDataByPage(filteredData)
       return preparedData;
@@ -176,6 +178,14 @@ export default class App extends React.Component {
     let availableStates = this.getTheAvailableStates(sortedData);
     const { currentIndexOfData, currentActivePerson } = this.state;
 
+    if (!showedPersons) {
+      return (
+        <div className="App">
+          <Search onChangeSubstringInSearch={this.onChangeSubstringInSearch}/>
+          <NotFound />
+        </div>
+      );
+    }
 
     return (
       <div className="App">
