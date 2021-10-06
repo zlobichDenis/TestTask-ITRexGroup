@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import App from './components/app/App';
+// import App from './components/app/App';
+import { AppWrapper } from './components/app-wrapper/app-wrapper';
 
 function getData() {
   const url = 'https://itrex-react-lab-files.s3.eu-central-1.amazonaws.com/react-test-api.json';
@@ -18,9 +19,16 @@ function getData() {
 
 const data = getData();
 
+// ReactDOM.render(
+//   <React.StrictMode>
+//     <App data={data}/>
+//   </React.StrictMode>,
+//   document.getElementById('root')
+// );
+
 ReactDOM.render(
   <React.StrictMode>
-    <App data={data}/>
+    <AppWrapper data={data}/>
   </React.StrictMode>,
   document.getElementById('root')
 );
