@@ -6,6 +6,12 @@ import { Search } from "../search/search";
 import { TableButtons } from "../table-buttons/table-buttons";
 import { ShowContainer } from "../show-container/show-container";
 import { NotFound } from "../not-found/not-found";
+import { substringInSearchActionCreator } from "../../store/actionCreators/substring-search-action-creator";
+import { activeFilterActionCreator } from "../../store/actionCreators/active-filter-action-creator";
+import { fieldSortActionCreator } from "../../store/actionCreators/field-sort-action-creator";
+import { currentIndexActionCreator } from "../../store/actionCreators/current-index-data-action-creator";
+import { currentActivePersonActionCreator } from "../../store/actionCreators/current-active-person-action-creator";
+import { SET_CURRENT_INDEX } from "../../store/actions/current-index-actions";
 
 export default class App extends React.Component {
   constructor(props) {
@@ -13,19 +19,14 @@ export default class App extends React.Component {
 
     this.props = props;
 
-    this.state = {
-      currentIndexOfData: 0,
-      currentActivePerson: null,
-      activeFilter: 'NONE',
-      activeFieldOfSort: {},
-      substringInSearch: '',
-  };
+    let { onChangeSubstringInSearch, onChangeActiveFieldOfSort, onChangeActiveFilter, onChangeCurrentIndex, onChangeActivePerson } = this.props;
 
-    this.onChangeActivePerson = this.onChangeActivePerson.bind(this);
-    this.onChangeCurrentIndex = this.onChangeCurrentIndex.bind(this);
-    this.onChangeActiveFilter = this.onChangeActiveFilter.bind(this);
-    this.onChangeActiveFieldOfSort = this.onChangeActiveFieldOfSort.bind(this);
-    this.onChangeSubstringInSearch = this.onChangeSubstringInSearch.bind(this);
+
+    this.onChangeActivePerson = onChangeActivePerson.bind(this);
+    this.onChangeCurrentIndex = onChangeCurrentIndex.bind(this);
+    this.onChangeActiveFilter = onChangeActiveFilter.bind(this);
+    this.onChangeActiveFieldOfSort = onChangeActiveFieldOfSort.bind(this);
+    this.onChangeSubstringInSearch = onChangeSubstringInSearch.bind(this);
  }
 
   splitDataByPage(data) {
@@ -108,75 +109,11 @@ export default class App extends React.Component {
     }
  }
 
-  onChangeActivePerson(person) {
-    this.setState({
-      currentActivePerson: person,
-    })
- }
-
-  onChangeCurrentIndex(index, typeOfButton) {
-    switch (typeOfButton) {
-      case 'NEXT':
-        this.setState(prevState => ({
-          currentIndexOfData: prevState.currentIndexOfData + 1,
-        }))
-        break;
-
-      case 'PREV':
-        this.setState(prevState => ({
-          currentIndexOfData: prevState.currentIndexOfData -1,
-        }))
-        break;
-
-      default:
-        this.setState({
-          currentIndexOfData: index,
-        })
-    }
-
- }
-
-  getTheAvailableStates(data) {
-    let availableStates = new Set();
-    data.forEach((person) => {
-      availableStates.add(person.adress.state);
-    })
-    
-    return availableStates
-  }
-
-  onChangeActiveFilter(activeFilter) {
-    this.setState({
-      activeFilter: activeFilter,
-      currentIndexOfData: 0,
-      activeFieldOfSort: {},
-    })
-  }
-
-  onChangeActiveFieldOfSort(sortField) {
-    this.setState({
-      activeFieldOfSort: sortField,
-      currentIndexOfData: 0,
-    })
-  }
-
-  onChangeSubstringInSearch(string) {
-    this.setState({
-      substringInSearch: string,
-      activeFieldOfSort: {},
-      currentIndexOfData: 0,
-    })
-  }
-
-
-
   render() {
     const { data } = this.props;
-    let { activeFilter, activeFieldOfSort, substringInSearch } = this.state;
+    let { activeFilter, activeFieldOfSort, substringInSearch } = this.props;
     let sortedData = this.getSortedData(data, activeFieldOfSort);
     const showedPersons = this.prepareDataForRenderingByFilter(sortedData, activeFilter, substringInSearch);
-    let availableStates = this.getTheAvailableStates(sortedData);
-    const { currentIndexOfData, currentActivePerson } = this.state;
 
     if (!showedPersons) {
       return (
@@ -186,6 +123,9 @@ export default class App extends React.Component {
         </div>
       );
     }
+
+    let availableStates = this.getTheAvailableStates(sortedData);
+    const { currentIndexOfData, currentActivePerson } = this.props;
 
     return (
       <div className="App">
@@ -203,3 +143,38 @@ App.propTypes = {
   data: PropTypes.arrayOf(PropTypes.object).isRequired,
 }
 
+export const mapStateToProps = (state, ownProps) => {
+  return Object.assign({}, ownProps, {
+    currentIndexOfData: state.currentIndexOfData,
+    currentActivePerson: state.currentActivePerson,
+    activeFilter: state.activeFilter,
+    activeFieldOfSort: state.activeFieldOfSort,
+    substringInSearch: state.substringInSearch,
+  })
+};
+
+export const mapDispatchToProps = (dispatch) => {
+  return {
+    onChangeSubstringInSearch: function(substring) {
+      dispatch(substringInSearchActionCreator(substring));
+      dispatch(fieldSortActionCreator({}));
+      dispatch(activeFilterActionCreator('NONE'));
+      dispatch(currentIndexActionCreator(SET_CURRENT_INDEX, 0));
+    },
+    onChangeActiveFilter: function(activeFilter) {
+      dispatch(activeFilterActionCreator(activeFilter))
+      dispatch(currentIndexActionCreator(SET_CURRENT_INDEX, 0));
+      dispatch(fieldSortActionCreator({}));
+    },
+    onChangeActiveFieldOfSort: function(sortField) {
+      dispatch(fieldSortActionCreator(sortField));
+      dispatch(currentIndexActionCreator(SET_CURRENT_INDEX, 0));
+    },
+    onChangeCurrentIndex: function(typeOfButton, index) {
+      dispatch(currentIndexActionCreator(typeOfButton, index))
+    },
+    onChangeActivePerson: function(person) {
+      dispatch(currentActivePersonActionCreator(person))
+    },
+  }
+};

@@ -1,8 +1,8 @@
 import { CHANGE_ACTIVE_PERSON } from "../actions/active-person-actions";
 
-export const currentIndexActionCreator = (index) => {
+export const currentActivePersonActionCreator = (person) => {
     return {
         type: CHANGE_ACTIVE_PERSON,
-        value: index,
+        value: person,
     }
 }
