@@ -29,6 +29,12 @@ export default class App extends React.Component {
     this.onChangeSubstringInSearch = onChangeSubstringInSearch.bind(this);
  }
 
+  getTheAvailableStates(data) {
+    const states = new Set();
+    data.forEach((person) => states.add(person.adress.state))
+    return states;
+  }
+
   splitDataByPage(data) {
     let preparedData = [];
     const maxNumberOfPersonsPerPage = 20;
@@ -161,20 +167,25 @@ export const mapDispatchToProps = (dispatch) => {
       dispatch(activeFilterActionCreator('NONE'));
       dispatch(currentIndexActionCreator(SET_CURRENT_INDEX, 0));
     },
+
     onChangeActiveFilter: function(activeFilter) {
       dispatch(activeFilterActionCreator(activeFilter))
       dispatch(currentIndexActionCreator(SET_CURRENT_INDEX, 0));
       dispatch(fieldSortActionCreator({}));
     },
+
     onChangeActiveFieldOfSort: function(sortField) {
       dispatch(fieldSortActionCreator(sortField));
       dispatch(currentIndexActionCreator(SET_CURRENT_INDEX, 0));
     },
+
     onChangeCurrentIndex: function(typeOfButton, index) {
       dispatch(currentIndexActionCreator(typeOfButton, index))
     },
+
     onChangeActivePerson: function(person) {
       dispatch(currentActivePersonActionCreator(person))
     },
+    
   }
 };
